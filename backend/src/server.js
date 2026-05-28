@@ -1,4 +1,8 @@
-require("dotenv").config();
+// On Render, use Dashboard env vars. Locally, load backend/.env.
+if (!process.env.RENDER) {
+  require("dotenv").config();
+}
+
 const fs = require("fs");
 const connectDB = require("./config/db");
 const app = require("./app");
@@ -15,7 +19,18 @@ const validateRequiredEnv = () => {
     // eslint-disable-next-line no-console
     console.error(`Startup failed: Missing required environment variable(s): ${missing.join(", ")}`);
     // eslint-disable-next-line no-console
-    console.error("Set them in Render Dashboard -> Environment before deploying.");
+    console.error(
+      `Env present: PORT=${Boolean(process.env.PORT)}, MONGO_URI=${Boolean(process.env.MONGO_URI)}, JWT_SECRET=${Boolean(process.env.JWT_SECRET)}`
+    );
+    if (process.env.RENDER) {
+      // eslint-disable-next-line no-console
+      console.error(
+        "Render fix: Dashboard -> your service -> Environment -> Add MONGO_URI and JWT_SECRET -> Save -> Manual Deploy"
+      );
+    } else {
+      // eslint-disable-next-line no-console
+      console.error("Local fix: copy backend/.env.example to backend/.env and fill all values.");
+    }
     process.exit(1);
   }
 };
