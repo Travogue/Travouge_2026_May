@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: travouge-api
+    rootDir: backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 22.14.0
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@travouge.com
+      - key: ADMIN_PASSWORD
+        sync: false

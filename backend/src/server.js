@@ -4,7 +4,8 @@ const connectDB = require("./config/db");
 const app = require("./app");
 const User = require("./models/User");
 
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
+const HOST = "0.0.0.0";
 
 const validateRequiredEnv = () => {
   const required = ["MONGO_URI", "JWT_SECRET"];
@@ -40,10 +41,14 @@ const bootstrap = async () => {
     }
   }
 
-  app.listen(PORT, () => {
+  app.listen(PORT, HOST, () => {
     // eslint-disable-next-line no-console
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on http://${HOST}:${PORT}`);
   });
 };
 
-bootstrap();
+bootstrap().catch((error) => {
+  // eslint-disable-next-line no-console
+  console.error("Startup failed:", error.message);
+  process.exit(1);
+});
